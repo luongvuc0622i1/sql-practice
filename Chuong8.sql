@@ -47,9 +47,9 @@ ALTER TABLE Mark
 ADD FOREIGN KEY (SubID) REFERENCES Subject(SubID),
 ADD FOREIGN KEY (StudentID) REFERENCES Student(StudentID);
 
-INSERT INTO Class (ClassName, Status) VALUES ("A1", 1),
-											 ("A2", 1),
-                                             ("B3", 0);
+INSERT INTO Class (ClassName, Status, StartDate) VALUES ("A1", 1, "2008-12-20"),
+														("A2", 1, "2008-12-22");
+INSERT INTO Class (ClassName, Status) VALUES ("B3", 0);
                                              
 INSERT INTO Student (StudentID, StudentName, Address, Phone, ClassID) VALUES (1, "Hung", "Ha noi", "0912113113", 1);
 INSERT INTO Student (StudentID, StudentName, Address, ClassID) VALUES (2, "Hoa", "Hai phong", 1);
@@ -66,3 +66,36 @@ INSERT INTO Mark (SubID, StudentID, Mark) VALUES (2, 1, 12);
 
 UPDATE Student SET ClassID = 2 WHERE StudentName = "Hung";
 UPDATE Student SET Phone = "No phone" WHERE Phone IS NULL;
+
+-- 
+-- 
+UPDATE Class SET Status = 0 WHERE ClassID NOT IN (SELECT DISTINCT ClassID FROM Student);
+UPDATE Subject SET Status = 0 WHERE SubID NOT IN (SELECT DISTINCT SubID FROM Mark);
+
+SELECT * FROM Student WHERE StudentName LIKE 'h%';
+SELECT * FROM Class WHERE Month(StartDate) = 12;
+SELECT MAX(Credit) FROM Subject;
+SELECT * FROM Subject WHERE Credit = (SELECT MAX(Credit) FROM Subject);
+SELECT * FROM Subject WHERE Credit BETWEEN 3 AND 5;
+SELECT c.ClassID, c.ClassName, s.StudentName, s.Address FROM Class AS c JOIN Student AS s ON c.ClassID = s.ClassID;
+SELECT * FROM Subject WHERE SubID NOT IN (SELECT DISTINCT SubID FROM Mark);
+SELECT * FROM Subject WHERE SubID = (SELECT SubID FROM Mark WHERE Mark = (SELECT MAX(Mark) FROM Mark));
+SELECT s.StudentName, AVG(m.Mark) FROM Student AS s JOIN MARK AS m ON s.StudentID = m.StudentID GROUP BY StudentName;
+
+DELETE FROM Class WHERE Status = 0;
+DELETE FROM Subject WHERE Status = 0;
+-- Chuyển cơ sở dữ liệu hiện hành sang cơ sở dữ liệu Master.
+-- Xóa bỏ cơ sở dữ liệu vừa tạo.
+
+ALTER TABLE Mark DROP ExamTimes;
+ALTER TABLE Class
+RENAME COLUMN Status TO ClassStatus;
+ALTER TABLE Mark RENAME TO SubjectTest;
+
+DROP DATABASE Chuong8;
+
+
+
+
+
+
