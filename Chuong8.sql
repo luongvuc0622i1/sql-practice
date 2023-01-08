@@ -84,8 +84,6 @@ SELECT s.StudentName, AVG(m.Mark) FROM Student AS s JOIN MARK AS m ON s.StudentI
 
 DELETE FROM Class WHERE Status = 0;
 DELETE FROM Subject WHERE Status = 0;
--- Chuyển cơ sở dữ liệu hiện hành sang cơ sở dữ liệu Master.
--- Xóa bỏ cơ sở dữ liệu vừa tạo.
 
 ALTER TABLE Mark DROP ExamTimes;
 ALTER TABLE Class
